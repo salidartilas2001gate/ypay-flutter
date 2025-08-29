@@ -1,39 +1,35 @@
-group 'com.yandex.pay.flutter_plugin'
-version '1.0-SNAPSHOT'
-
-buildscript {
-    ext.kotlin_version = '2.0.20'
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://storage.googleapis.com/r8-releases/raw")
-        }
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.2'
-        classpath 'com.android.tools:r8:8.2.24'
-    }
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android' // если есть
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+group = 'com.yandex.pay.flutter_plugin'
+version = '1.0-SNAPSHOT'
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+// === Подключаем Flutter SDK, чтобы появились классы io.flutter.* ===
+def localProps = new Properties()
+def localPropsFile = rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    localPropsFile.withReader('UTF-8') { localProps.load(it) }
+}
+def flutterSdk = localProps.getProperty('flutter.sdk') ?: System.getenv('FLUTTER_HOME')
+if (!flutterSdk) {
+    throw new GradleException("Flutter SDK not found. Set 'flutter.sdk' in local.properties or FLUTTER_HOME env.")
+}
+//apply from: "${flutterSdk}/packages/flutter_tools/gradle/flutter.gradle"
+// === конец блока подключения Flutter ===
 
 android {
-    if (project.android.hasProperty("namespace")) {
-        namespace 'com.yandex.pay.flutter_plugin'
-    }
-
+    namespace 'com.yandex.pay.flutter_plugin'
     compileSdk 34
 
+    defaultConfig {
+        minSdk 24
+        manifestPlaceholders = [ YANDEX_CLIENT_ID: "a7186b523b5142aea65db959655d6b87" ]
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    // AGP 8.7/Kotlin 2.0 → Java 17
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -41,23 +37,20 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += ['-Xskip-metadata-version-check']
     }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
     }
-
-    defaultConfig {
-        minSdkVersion 24
-
-        manifestPlaceholders = [YANDEX_CLIENT_ID: "331C8081294A63A400263BE5"]
-    }
-
-    dependencies {
-        implementation('com.yandex.pay:pay:2.3.10') // 10
-        testImplementation 'org.jetbrains.kotlin:kotlin-test'
-        testImplementation 'org.mockito:mockito-core:5.0.0'
-    }
 }
 
+dependencies {
+    // Сначала соберись на текущей версии SDK:
+    implementation 'com.yandex.pay:pay:2.3.10'
+    // Потом подними до нужной (напр. 2.11.0), когда сборка ок:
+    // implementation 'com.yandex.pay:pay:2.11.0'
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.mockito:mockito-core:5.0.0'
+}
