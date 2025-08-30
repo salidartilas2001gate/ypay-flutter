@@ -1,9 +1,9 @@
 name: ypay
 description: YPay Flutter SDK.
 version: 1.0.4
-repository: https://github.com/headless-devs/ypay-flutter
-issue_tracker: https://github.com/headless-devs/ypay-flutter/issues
-homepage: https://thehead.ru/
+repository: https://github.com/salidartilas2001gate/ypay-flutter
+#issue_tracker: https://github.com/headless-devs/ypay-flutter/issues
+#homepage: https://thehead.ru/
 
 environment:
   sdk: ">=3.0.0  <4.0.0"
