@@ -1,19 +1,12 @@
-group 'com.yandex.pay.flutter_plugin'
-version '1.0-SNAPSHOT'
-
 buildscript {
-    ext.kotlin_version = '2.0.20'
+    ext.kotlin_version = '1.8.20'
     repositories {
         google()
-        mavenCentral()
-        maven {
-            url = uri("https://storage.googleapis.com/r8-releases/raw")
-        }
+        mavenCentral()  // обязательно
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.2'
-        classpath 'com.android.tools:r8:8.2.24'
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"  // ← Добавь эту строку!
     }
 }
 
@@ -25,7 +18,7 @@ allprojects {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android'  // теперь найдётся
 
 android {
     if (project.android.hasProperty("namespace")) {
@@ -50,14 +43,12 @@ android {
 
     defaultConfig {
         minSdkVersion 24
-
         manifestPlaceholders = [YANDEX_CLIENT_ID: "331C8081294A63A400263BE5"]
     }
 
     dependencies {
-        implementation('com.yandex.pay:pay:2.3.10') // 10
+        implementation('com.yandex.pay:pay:2.3.10')
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.0.0'
     }
 }
-
