@@ -1,5 +1,7 @@
+
 group 'com.yandex.pay.flutter_plugin'
 version '1.0-SNAPSHOT'
+
 
 buildscript {
     ext.kotlin_version = '2.0.20'
@@ -18,6 +20,29 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+
+// Flutter tooling must be applied after Android & Kotlin plugins
+// so that the `android {}` extension already exists
+
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
 
 android {
     namespace 'com.yandex.pay.ypay_android'
