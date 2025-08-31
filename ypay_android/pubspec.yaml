@@ -1,8 +1,7 @@
 name: ypay_android
 description: "YPay Android SDK"
 version: 1.0.3
-repository: https://github.com/headless-devs/ypay-flutter
-homepage: https://thehead.ru/
+repository: https://github.com/salidartilas2001gate/ypay-flutter
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
