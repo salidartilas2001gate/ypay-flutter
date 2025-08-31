@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.yandex.pay:pay:2.5.0'
+    implementation 'com.yandex.pay:pay:2.11.0'
     implementation 'androidx.browser:browser:1.8.0'
 
     testImplementation "org.jetbrains.kotlin:kotlin-test:${kotlin_version}"
