@@ -1,43 +1,35 @@
-
 group 'com.yandex.pay.flutter_plugin'
 version '1.0-SNAPSHOT'
-
 
 buildscript {
     ext.kotlin_version = '2.0.20'
     repositories {
         google()
         mavenCentral()
-        // при желании можно удалить r8 — AGP 8.x содержит R8
         maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.7.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
-        // classpath 'com.android.tools:r8:8.2.24' // обычно не нужен
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-// Flutter tooling must be applied after Android & Kotlin plugins
-// so that the `android {}` extension already exists
-
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
+// ---- читаем путь к Flutter SDK из local.properties / окружения
+def localProps = new Properties()
+def localPropsFile = rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    localPropsFile.withReader('UTF-8') { reader -> localProps.load(reader) }
 }
-
-def flutterSdk = localProperties.getProperty('flutter.sdk') ?: System.getenv('FLUTTER_ROOT')
+def flutterSdk = localProps.getProperty('flutter.sdk') ?: System.getenv('FLUTTER_ROOT')
 if (flutterSdk == null) {
     throw new GradleException("Flutter SDK path not set. Add flutter.sdk to local.properties or set FLUTTER_ROOT")
 }
-
-// ВАЖНО: Flutter tooling должен быть подключён
+// Подключаем Flutter tooling (даёт io.flutter.* классы)
 apply from: "$flutterSdk/packages/flutter_tools/gradle/flutter.gradle"
-
+// ----
 
 android {
     namespace 'com.yandex.pay.ypay_android'
@@ -46,10 +38,7 @@ android {
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 34
-
-        manifestPlaceholders = [
-                YANDEX_CLIENT_ID: (project.findProperty("YANDEX_CLIENT_ID") ?: "")
-        ]
+        manifestPlaceholders = [ YANDEX_CLIENT_ID: (project.findProperty("YANDEX_CLIENT_ID") ?: "") ]
         consumerProguardFiles 'consumer-rules.pro'
     }
 
@@ -67,7 +56,6 @@ android {
     }
 }
 
-// ВАЖНО: здесь только зависимости, без repositories{}
 dependencies {
     implementation 'com.yandex.pay:pay:2.5.0'
     implementation 'androidx.browser:browser:1.8.0'
