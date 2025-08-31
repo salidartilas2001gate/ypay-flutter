@@ -1,14 +1,22 @@
-rootProject.name = 'ypay_android'
 pluginManagement {
-    buildscript {
-        repositories {
-            mavenCentral()
-            maven {
-                url = uri("https://storage.googleapis.com/r8-releases/raw")
-            }
-        }
-        dependencies {
-            classpath("com.android.tools:r8:8.2.24")
-        }
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        // если нужен r8-репозиторий — оставь строку ниже
+        maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
     }
 }
+
+dependencyResolutionManagement {
+    // Запрещаем репозитории в проектах/модулях
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // если что-то тянется из r8-репозитория — добавь его и здесь
+        maven { url = uri("https://storage.googleapis.com/r8-releases/raw") }
+    }
+}
+
+rootProject.name = "ypay_android"
