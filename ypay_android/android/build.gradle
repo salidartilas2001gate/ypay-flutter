@@ -20,7 +20,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace 'com.yandex.pay.flutter_plugin'
+    namespace 'com.yandex.pay.ypay_android'
     compileSdk 34
 
     defaultConfig {
